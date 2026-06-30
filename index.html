@@ -1,753 +1,289 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mohammed Shaban - Data Scientist Portfolio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --bg-primary: #f8fafc;
-            --bg-secondary: #ffffff;
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --accent-blue: #3b82f6;
-            --accent-purple: #8b5cf6;
-            --accent-emerald: #10b981;
-            --accent-orange: #f97316;
-            --accent-pink: #ec4899;
-            --border-color: #e2e8f0;
-            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-            --font-heading: 'Syne', sans-serif;
-            --font-body: 'DM Sans', sans-serif;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: var(--font-body);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
-            cursor: none;
-        }
-
-        /* Loading Screen */
-        #loader {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(135deg, var(--text-primary) 0%, #1e293b 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            transition: opacity 0.8s ease, visibility 0.8s ease;
-        }
-
-        #loader.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .loader-content {
-            text-align: center;
-        }
-
-        .loader-name {
-            font-family: var(--font-heading);
-            font-size: 3rem;
-            font-weight: 800;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-emerald));
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: shimmer 2s linear infinite;
-            margin-bottom: 1rem;
-        }
-
-        .loader-subtitle {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-        }
-
-        .loader-spinner {
-            width: 60px;
-            height: 60px;
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-top: 3px solid var(--accent-blue);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 200% 50%; }
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Custom Cursor */
-        .cursor-dot {
-            position: fixed;
-            width: 8px;
-            height: 8px;
-            background: var(--accent-blue);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 12px var(--accent-blue);
-            transition: background 0.2s;
-        }
-
-        .cursor-ring {
-            position: fixed;
-            width: 40px;
-            height: 40px;
-            border: 2px solid rgba(59, 130, 246, 0.5);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9998;
-            transform: translate(-50%, -50%);
-            transition: width 0.25s, height 0.25s, border-color 0.25s;
-        }
-
-        .cursor-hover {
-            width: 60px !important;
-            height: 60px !important;
-            border-color: var(--accent-purple) !important;
-        }
-
-        /* Particle Canvas */
-        #particle-canvas {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 4rem;
-            align-items: center;
-            padding: 2rem 0;
-        }
-
-        .hero-content {
-            max-width: 600px;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            color: var(--accent-blue);
-            font-size: 0.875rem;
-            font-weight: 600;
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            margin-bottom: 1.5rem;
-        }
-
-        .hero-badge::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: var(--accent-emerald);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.2); }
-        }
-
-        .hero-title {
-            font-family: var(--font-heading);
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 1rem;
-            background: linear-gradient(90deg, var(--text-primary) 0%, var(--accent-blue) 25%, var(--accent-purple) 50%, var(--accent-emerald) 75%, var(--text-primary) 100%);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: shimmer 4s linear infinite;
-        }
-
-        .hero-subtitle {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-        }
-
-        .hero-description {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            line-height: 1.7;
-            margin-bottom: 2rem;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.875rem 2rem;
-            border-radius: 9999px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: var(--transition);
-            cursor: none;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-            color: white;
-            box-shadow: var(--shadow-md);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .btn-secondary {
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            border: 2px solid var(--border-color);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--accent-blue);
-            color: var(--accent-blue);
-            transform: translateY(-2px);
-        }
-
-        /* 3D Card & Avatar */
-        .hero-visual {
-            perspective: 1000px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .card-3d {
-            width: 300px;
-            height: 380px;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            border-radius: 24px;
-            box-shadow: var(--shadow-lg);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-            transform-style: preserve-3d;
-            animation: float3d 20s infinite linear;
-            position: relative;
-        }
-
-        @keyframes float3d {
-            0% { transform: rotateX(5deg) rotateY(0deg) translateY(0px); }
-            25% { transform: rotateX(10deg) rotateY(90deg) translateY(-10px); }
-            50% { transform: rotateX(5deg) rotateY(180deg) translateY(0px); }
-            75% { transform: rotateX(0deg) rotateY(270deg) translateY(10px); }
-            100% { transform: rotateX(5deg) rotateY(360deg) translateY(0px); }
-        }
-
-        .avatar-container {
-            position: relative;
-            margin-bottom: 1.5rem;
-        }
-
-        .avatar-initials {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-family: var(--font-heading);
-            font-size: 2.5rem;
-            font-weight: 800;
-            position: relative;
-            z-index: 2;
-        }
-
-        .ripple {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            border: 2px solid var(--accent-blue);
-            opacity: 0;
-            animation: ripple 3s infinite;
-        }
-
-        .ripple:nth-child(1) { animation-delay: 0s; }
-        .ripple:nth-child(2) { animation-delay: 1s; }
-        .ripple:nth-child(3) { animation-delay: 2s; }
-
-        @keyframes ripple {
-            0% {
-                width: 120px;
-                height: 120px;
-                opacity: 0.8;
-            }
-            100% {
-                width: 300px;
-                height: 300px;
-                opacity: 0;
-            }
-        }
-
-        .card-info {
-            text-align: center;
-        }
-
-        .card-title {
-            font-family: var(--font-heading);
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .card-subtitle {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            margin-bottom: 1rem;
-        }
-
-        .card-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            text-align: center;
-        }
-
-        .stat-item {
-            padding: 0.5rem;
-        }
-
-        .stat-number {
-            font-family: var(--font-heading);
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--accent-blue);
-        }
-
-        .stat-label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-        }
-
-        /* Marquee */
-        .marquee-section {
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-            padding: 2rem 0;
-            overflow: hidden;
-        }
-
-        .marquee-track {
-            display: flex;
-            animation: marquee 25s linear infinite;
-            width: max-content;
-        }
-
-        .marquee-item {
-            font-family: var(--font-heading);
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin: 0 3rem;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .marquee-item::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: var(--accent-emerald);
-            border-radius: 50%;
-        }
-
-        @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        /* Sections */
-        section {
-            padding: 6rem 0;
-            position: relative;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .section-badge {
-            display: inline-block;
-            background: rgba(59, 130, 246, 0.1);
-            color: var(--accent-blue);
-            font-size: 0.875rem;
-            font-weight: 600;
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            margin-bottom: 1rem;
-        }
-
-        .section-title {
-            font-family: var(--font-heading);
-            font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 800;
-            margin-bottom: 1rem;
-        }
-
-        .section-description {
-            font-size: 1.125rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Cards */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .card {
-            background: var(--bg-secondary);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-color);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-emerald));
-            transition: width 0.6s ease;
-        }
-
-        .card:hover::before {
-            width: 100%;
-        }
-
-        .card-header {
-            margin-bottom: 1.5rem;
-        }
-
-        .card-title {
-            font-family: var(--font-heading);
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .card-subtitle {
-            color: var(--accent-blue);
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        .card-meta {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-        }
-
-        .card-content p {
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-        }
-
-        .card-content ul {
-            color: var(--text-secondary);
-        }
-
-        .card-content li {
-            margin-bottom: 0.5rem;
-        }
-
-        .tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .tag {
-            background: rgba(59, 130, 246, 0.1);
-            color: var(--accent-blue);
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-        }
-
-        /* Skills */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 3rem;
-        }
-
-        .skill-category {
-            background: var(--bg-secondary);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-color);
-        }
-
-        .skill-category h3 {
-            font-family: var(--font-heading);
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-            color: var(--text-primary);
-        }
-
-        .skill-item {
-            margin-bottom: 1.5rem;
-        }
-
-        .skill-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .skill-name {
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .skill-level {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-        }
-
-        .skill-bar {
-            width: 100%;
-            height: 8px;
-            background: var(--border-color);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .skill-fill {
-            height: 100%;
-            width: 0;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
-            border-radius: 4px;
-            transition: width 2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* Contact */
-        .contact {
-            background: var(--bg-secondary);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .contact-ripples {
-            position: absolute;
-            top: 50%;
-            right: 10%;
-            transform: translate(50%, -50%);
-        }
-
-        .contact-ripple {
-            position: absolute;
-            border-radius: 50%;
-            border: 2px solid var(--accent-blue);
-            opacity: 0;
-            animation: contactRipple 4s infinite;
-        }
-
-        .contact-ripple:nth-child(1) { animation-delay: 0s; }
-        .contact-ripple:nth-child(2) { animation-delay: 1.33s; }
-        .contact-ripple:nth-child(3) { animation-delay: 2.66s; }
-
-        @keyframes contactRipple {
-            0% {
-                width: 100px;
-                height: 100px;
-                opacity: 0.8;
-            }
-            100% {
-                width: 400px;
-                height: 400px;
-                opacity: 0;
-            }
-        }
-
-        .contact-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-        }
-
-        .contact-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .contact-item {
-            background: rgba(59, 130, 246, 0.05);
-            border: 1px solid rgba(59, 130, 246, 0.1);
-            border-radius: 16px;
-            padding: 2rem;
-            text-align: center;
-        }
-
-        .contact-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .contact-label {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .contact-value {
-            color: var(--text-secondary);
-        }
-
-        /* Reveal Animations */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-
-        .reveal-left {
-            opacity: 0;
-            transform: translateX(-30px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-
-        .reveal-right {
-            opacity: 0;
-            transform: translateX(30px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-
-        .reveal.visible,
-        .reveal-left.visible,
-        .reveal-right.visible {
-            opacity: 1;
-            transform: translate(0);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero {
-                grid-template-columns: 1fr;
-                text-align: center;
-                gap: 2rem;
-            }
-
-            .hero-visual {
-                order: -1;
-            }
-
-            .card-3d {
-                width: 280px;
-                height: 320px;
-            }
-
-            .skills-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-buttons {
-                justify-content: center;
-            }
-
-            section {
-                padding: 4rem 0;
-            }
-
-            .container {
-                padding: 0 1rem;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mohammed Shaban — Data Scientist | LLMs · RAG · Agentic AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --accent-blue: #3b82f6;
+  --accent-purple: #8b5cf6;
+  --accent-emerald: #10b981;
+  --accent-orange: #f97316;
+  --accent-pink: #ec4899;
+  --border-color: #e2e8f0;
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  --font-heading: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* Loading Screen */
+#loader {
+  position: fixed; inset: 0;
+  background: linear-gradient(135deg, var(--text-primary) 0%, #1e293b 100%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 10000;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+#loader.hidden { opacity: 0; visibility: hidden; }
+.loader-content { text-align: center; }
+.loader-name {
+  font-family: var(--font-heading); font-size: 3rem; font-weight: 800;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-emerald));
+  background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; animation: shimmer 2s linear infinite; margin-bottom: 1rem;
+}
+.loader-subtitle { color: rgba(255, 255, 255, 0.7); font-size: 1.1rem; margin-bottom: 2rem; }
+.loader-spinner {
+  width: 60px; height: 60px; border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top: 3px solid var(--accent-blue); border-radius: 50%; animation: spin 1s linear infinite;
+}
+@keyframes shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* Custom Cursor */
+.cursor-dot {
+  position: fixed; width: 8px; height: 8px; background: var(--accent-blue); border-radius: 50%;
+  pointer-events: none; z-index: 9999; transform: translate(-50%, -50%);
+  box-shadow: 0 0 12px var(--accent-blue); transition: background 0.2s;
+}
+.cursor-ring {
+  position: fixed; width: 40px; height: 40px; border: 2px solid rgba(59, 130, 246, 0.5);
+  border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%);
+  transition: width 0.25s, height 0.25s, border-color 0.25s;
+}
+.cursor-hover { width: 60px !important; height: 60px !important; border-color: var(--accent-purple) !important; }
+
+/* Particle Canvas */
+#particle-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+
+/* Container */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 2; }
+
+/* Nav */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 48px; background: rgba(248,250,252,.88);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border-color);
+}
+.nav-logo { font-family: var(--font-heading); font-weight: 800; font-size: 19px; letter-spacing: -.02em; }
+.nav-logo span { color: var(--accent-blue); }
+.nav-links { display: flex; gap: 28px; list-style: none; }
+.nav-links a { font-size: 13.5px; font-weight: 500; color: var(--text-secondary); text-decoration: none; transition: color .2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--text-primary); }
+.nav-btn {
+  font-family: var(--font-heading); font-size: 13px; font-weight: 700; padding: 10px 22px;
+  background: var(--text-primary); color: #fff; border-radius: 100px; text-decoration: none;
+  letter-spacing: .02em; transition: transform .2s, box-shadow .2s;
+}
+.nav-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.18); }
+
+/* Hero Section */
+.hero { min-height: 100vh; display: grid; grid-template-columns: 1fr auto; gap: 4rem; align-items: center; padding: 8rem 0 2rem; }
+.hero-content { max-width: 620px; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2); color: var(--accent-blue); font-size: 0.875rem;
+  font-weight: 600; padding: 0.5rem 1rem; border-radius: 9999px; margin-bottom: 1.5rem;
+}
+.hero-badge::before { content: ''; width: 8px; height: 8px; background: var(--accent-emerald); border-radius: 50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.2); } }
+
+.hero-title {
+  font-family: var(--font-heading); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; line-height: 1.1;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, var(--text-primary) 0%, var(--accent-blue) 25%, var(--accent-purple) 50%, var(--accent-emerald) 75%, var(--text-primary) 100%);
+  background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; animation: shimmer 4s linear infinite;
+}
+.hero-subtitle { font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 1.5rem; font-weight: 500; }
+.hero-subtitle strong { color: var(--accent-purple); font-weight: 700; }
+.hero-description { font-size: 1.05rem; color: var(--text-secondary); line-height: 1.75; margin-bottom: 2rem; }
+.hero-buttons { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+.btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.875rem 2rem; border-radius: 9999px; font-weight: 600; text-decoration: none; transition: var(--transition); cursor: none; font-family: var(--font-heading); font-size: 14px; }
+.btn-primary { background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); color: white; box-shadow: var(--shadow-md); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.btn-secondary { background: var(--bg-secondary); color: var(--text-primary); border: 2px solid var(--border-color); }
+.btn-secondary:hover { border-color: var(--accent-blue); color: var(--accent-blue); transform: translateY(-2px); }
+
+/* 3D Card & Avatar */
+.hero-visual { perspective: 1000px; display: flex; justify-content: center; align-items: center; }
+.card-3d {
+  width: 300px; height: 400px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 24px; box-shadow: var(--shadow-lg);
+  display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2rem;
+  transform-style: preserve-3d; animation: float3d 20s infinite linear; position: relative;
+}
+@keyframes float3d {
+  0% { transform: rotateX(5deg) rotateY(0deg) translateY(0px); }
+  25% { transform: rotateX(10deg) rotateY(90deg) translateY(-10px); }
+  50% { transform: rotateX(5deg) rotateY(180deg) translateY(0px); }
+  75% { transform: rotateX(0deg) rotateY(270deg) translateY(10px); }
+  100% { transform: rotateX(5deg) rotateY(360deg) translateY(0px); }
+}
+.avatar-container { position: relative; margin-bottom: 1.5rem; }
+.avatar-initials {
+  width: 120px; height: 120px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;
+  font-family: var(--font-heading); font-size: 2.5rem; font-weight: 800; position: relative; z-index: 2;
+}
+.ripple {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  border-radius: 50%; border: 2px solid var(--accent-blue); opacity: 0; animation: ripple 3s infinite;
+}
+.ripple:nth-child(1) { animation-delay: 0s; }
+.ripple:nth-child(2) { animation-delay: 1s; }
+.ripple:nth-child(3) { animation-delay: 2s; }
+@keyframes ripple { 0% { width: 120px; height: 120px; opacity: 0.8; } 100% { width: 300px; height: 300px; opacity: 0; } }
+
+.card-info { text-align: center; }
+.card-title { font-family: var(--font-heading); font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; }
+.card-subtitle { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem; }
+.card-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; text-align: center; }
+.stat-item { padding: 0.5rem; }
+.stat-number { font-family: var(--font-heading); font-size: 1.35rem; font-weight: 800; color: var(--accent-blue); }
+.stat-label { font-size: 0.68rem; color: var(--text-secondary); }
+
+/* Marquee */
+.marquee-section { background: var(--bg-secondary); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 2rem 0; overflow: hidden; position: relative; z-index: 2; }
+.marquee-track { display: flex; animation: marquee 25s linear infinite; width: max-content; }
+.marquee-track:hover { animation-play-state: paused; }
+.marquee-item { font-family: var(--font-heading); font-size: 1.05rem; font-weight: 600; color: var(--text-secondary); margin: 0 2.5rem; white-space: nowrap; display: flex; align-items: center; gap: 0.5rem; }
+.marquee-item::before { content: ''; width: 8px; height: 8px; background: var(--accent-emerald); border-radius: 50%; }
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* Sections */
+section { padding: 6rem 0; position: relative; }
+.section-header { text-align: center; margin-bottom: 4rem; }
+.section-badge { display: inline-block; background: rgba(59, 130, 246, 0.1); color: var(--accent-blue); font-size: 0.875rem; font-weight: 600; padding: 0.5rem 1rem; border-radius: 9999px; margin-bottom: 1rem; }
+.section-title { font-family: var(--font-heading); font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 1rem; }
+.section-description { font-size: 1.125rem; color: var(--text-secondary); max-width: 650px; margin: 0 auto; }
+
+/* Cards */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+.card {
+  background: var(--bg-secondary); border-radius: 20px; padding: 2rem; box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color); transition: var(--transition); position: relative; overflow: hidden;
+}
+.card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+.card::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 0; height: 4px;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-emerald));
+  transition: width 0.6s ease;
+}
+.card:hover::before { width: 100%; }
+.card-header { margin-bottom: 1.5rem; }
+.card .card-title { font-size: 1.25rem; margin-bottom: 0.5rem; }
+.card-subtitle { color: var(--accent-blue); font-weight: 600; margin-bottom: 0.25rem; }
+.card-meta { font-size: 0.875rem; color: var(--text-secondary); }
+.card-content p { color: var(--text-secondary); margin-bottom: 1rem; }
+.card-content ul { color: var(--text-secondary); padding-left: 1.1rem; }
+.card-content li { margin-bottom: 0.6rem; line-height: 1.6; }
+.tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+.tag { background: rgba(59, 130, 246, 0.1); color: var(--accent-blue); font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 9999px; }
+.tag.purple { background: rgba(139,92,246,.1); color: var(--accent-purple); }
+.tag.emerald { background: rgba(16,185,129,.1); color: var(--accent-emerald); }
+.tag.orange { background: rgba(249,115,22,.1); color: var(--accent-orange); }
+
+/* Highlight badge on experience cards */
+.highlight-badge {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 700;
+  padding: 4px 11px; border-radius: 100px; margin-bottom: 1rem; letter-spacing: .02em;
+  background: linear-gradient(135deg, rgba(139,92,246,.12), rgba(59,130,246,.12)); color: var(--accent-purple);
+}
+
+/* Skills */
+.skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 3rem; }
+.skill-category { background: var(--bg-secondary); border-radius: 20px; padding: 2rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); }
+.skill-category h3 { font-family: var(--font-heading); font-size: 1.4rem; margin-bottom: 2rem; color: var(--text-primary); }
+.skill-item { margin-bottom: 1.5rem; }
+.skill-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+.skill-name { font-weight: 600; color: var(--text-primary); font-size: .92rem; }
+.skill-level { font-size: 0.8rem; color: var(--text-secondary); }
+.skill-bar { width: 100%; height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden; }
+.skill-fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple)); border-radius: 4px; transition: width 2s cubic-bezier(0.4, 0, 0.2, 1); }
+
+/* Achievements strip */
+.achieve-strip { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 1.5rem; }
+.achieve-card {
+  background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 18px;
+  padding: 1.75rem; display: flex; gap: 14px; align-items: flex-start; transition: var(--transition);
+}
+.achieve-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+.achieve-icon { font-size: 1.6rem; flex-shrink: 0; }
+.achieve-title { font-family: var(--font-heading); font-weight: 700; font-size: .98rem; margin-bottom: 4px; }
+.achieve-desc { font-size: .85rem; color: var(--text-secondary); line-height: 1.55; }
+
+/* Contact */
+.contact { background: var(--bg-secondary); position: relative; overflow: hidden; }
+.contact-ripples { position: absolute; top: 50%; right: 10%; transform: translate(50%, -50%); }
+.contact-ripple { position: absolute; border-radius: 50%; border: 2px solid var(--accent-blue); opacity: 0; animation: contactRipple 4s infinite; }
+.contact-ripple:nth-child(1) { animation-delay: 0s; }
+.contact-ripple:nth-child(2) { animation-delay: 1.33s; }
+.contact-ripple:nth-child(3) { animation-delay: 2.66s; }
+@keyframes contactRipple { 0% { width: 100px; height: 100px; opacity: 0.8; } 100% { width: 400px; height: 400px; opacity: 0; } }
+.contact-content { position: relative; z-index: 2; text-align: center; }
+.contact-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 2rem; margin-top: 3rem; }
+.contact-item { background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.1); border-radius: 16px; padding: 2rem; text-align: center; transition: var(--transition); }
+.contact-item:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.contact-icon { font-size: 2rem; margin-bottom: 1rem; }
+.contact-label { font-weight: 600; margin-bottom: 0.5rem; }
+.contact-value { color: var(--text-secondary); font-size: .92rem; word-break: break-word; }
+.contact-item a { color: inherit; text-decoration: none; }
+
+footer { text-align: center; padding: 2.5rem; border-top: 1px solid var(--border-color); color: var(--text-secondary); font-size: 13px; position: relative; z-index: 2; background: var(--bg-secondary); }
+
+/* Reveal Animations */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal-left { opacity: 0; transform: translateX(-30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal-right { opacity: 0; transform: translateX(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal.visible, .reveal-left.visible, .reveal-right.visible { opacity: 1; transform: translate(0); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  nav { padding: 14px 20px; }
+  .nav-links { display: none; }
+  .hero { grid-template-columns: 1fr; text-align: center; gap: 2rem; padding-top: 7rem; }
+  .hero-visual { order: -1; }
+  .card-3d { width: 280px; height: 360px; }
+  .skills-grid { grid-template-columns: 1fr; }
+  .hero-buttons { justify-content: center; }
+  section { padding: 4rem 0; }
+  .container { padding: 0 1rem; }
+  body { cursor: auto; }
+  .cursor-dot, .cursor-ring { display: none; }
+}
+</style>
 </head>
 <body>
     <!-- Loader -->
     <div id="loader">
         <div class="loader-content">
             <div class="loader-name">Mohammed Shaban</div>
-            <div class="loader-subtitle">Data Scientist • AI/ML Expert</div>
+            <div class="loader-subtitle">Data Scientist • LLMs · RAG · Agentic AI</div>
             <div class="loader-spinner"></div>
         </div>
     </div>
@@ -759,23 +295,38 @@
     <!-- Particle Canvas -->
     <canvas id="particle-canvas"></canvas>
 
+    <!-- Nav -->
+    <nav>
+      <div class="nav-logo">MS<span>.</span></div>
+      <ul class="nav-links">
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#projects">POCs</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <a href="mailto:mohammedshaban854@gmail.com" class="nav-btn">Hire Me</a>
+    </nav>
+
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero" id="hero">
         <div class="container">
             <div class="hero-content reveal-left">
                 <div class="hero-badge">
                     Available for New Opportunities
                 </div>
                 <h1 class="hero-title">Mohammed Shaban</h1>
-                <div class="hero-subtitle">Data Scientist • AI/ML • Healthcare & Drug Discovery</div>
+                <div class="hero-subtitle">Data Scientist · <strong>LLMs, RAG & Agentic AI</strong></div>
                 <p class="hero-description">
-                    Data Scientist with 3+ years delivering AI/ML-based project delivery in healthcare, oncology, and drug discovery. 
-                    I drive data contextualization and model deployment pipelines to maximize efficiency and translate complex models 
-                    into measurable business outcomes aligned with long-range strategic objectives.
+                    Data Scientist with 3+ years building scalable machine learning models, Generative AI applications,
+                    and intelligent automation systems across enterprise and product environments. Proven track record
+                    delivering end-to-end AI/ML solutions through production with measurable improvements in operational
+                    efficiency, user adoption, and business outcomes. Skilled in Python, LLMs, RAG architectures,
+                    agentic AI, cloud deployment, and stakeholder-facing analytics.
                 </p>
                 <div class="hero-buttons">
                     <a href="#contact" class="btn btn-primary">Get In Touch</a>
-                    <a href="#projects" class="btn btn-secondary">View Projects</a>
+                    <a href="#projects" class="btn btn-secondary">View POCs</a>
                 </div>
             </div>
             <div class="hero-visual reveal-right">
@@ -791,12 +342,12 @@
                         <div class="card-subtitle">Delivering measurable outcomes</div>
                         <div class="card-stats">
                             <div class="stat-item">
-                                <div class="stat-number">8mo</div>
-                                <div class="stat-label">Accelerated</div>
+                                <div class="stat-number">40%</div>
+                                <div class="stat-label">Efficiency Gain</div>
                             </div>
                             <div class="stat-item">
-                                <div class="stat-number">$0.2M</div>
-                                <div class="stat-label">Investment</div>
+                                <div class="stat-number">$200K+</div>
+                                <div class="stat-label">Investment Influenced</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-number">0.82</div>
@@ -813,26 +364,26 @@
     <div class="marquee-section">
         <div class="marquee-track">
             <div class="marquee-item">Mestastop Solutions</div>
-            <div class="marquee-item">Turing Minds.Ai</div>
-            <div class="marquee-item">Case Western Reserve University</div>
+            <div class="marquee-item">Turing Minds.AI</div>
+            <div class="marquee-item">International School of Engineering</div>
+            <div class="marquee-item">T John Institute of Technology</div>
             <div class="marquee-item">AWS SageMaker</div>
-            <div class="marquee-item">XGBoost</div>
-            <div class="marquee-item">Random Forest</div>
-            <div class="marquee-item">SHAP Explainability</div>
-            <div class="marquee-item">Drug Discovery</div>
-            <div class="marquee-item">Oncology AI</div>
-            <div class="marquee-item">Multi-Omics</div>
+            <div class="marquee-item">RAG Architectures</div>
+            <div class="marquee-item">Agentic AI</div>
+            <div class="marquee-item">LLMs</div>
+            <div class="marquee-item">Patented ML Algorithm</div>
+            <div class="marquee-item">Explainable AI</div>
             <!-- Duplicated for seamless loop -->
             <div class="marquee-item">Mestastop Solutions</div>
-            <div class="marquee-item">Turing Minds.Ai</div>
-            <div class="marquee-item">Case Western Reserve University</div>
+            <div class="marquee-item">Turing Minds.AI</div>
+            <div class="marquee-item">International School of Engineering</div>
+            <div class="marquee-item">T John Institute of Technology</div>
             <div class="marquee-item">AWS SageMaker</div>
-            <div class="marquee-item">XGBoost</div>
-            <div class="marquee-item">Random Forest</div>
-            <div class="marquee-item">SHAP Explainability</div>
-            <div class="marquee-item">Drug Discovery</div>
-            <div class="marquee-item">Oncology AI</div>
-            <div class="marquee-item">Multi-Omics</div>
+            <div class="marquee-item">RAG Architectures</div>
+            <div class="marquee-item">Agentic AI</div>
+            <div class="marquee-item">LLMs</div>
+            <div class="marquee-item">Patented ML Algorithm</div>
+            <div class="marquee-item">Explainable AI</div>
         </div>
     </div>
 
@@ -843,170 +394,125 @@
                 <div class="section-badge">Career Journey</div>
                 <h2 class="section-title">Professional Experience</h2>
                 <p class="section-description">
-                    A track record of delivering measurable AI/ML outcomes across healthcare, oncology, and drug discovery.
+                    3+ years building scalable ML systems, Generative AI applications, and intelligent automation
+                    across enterprise and product environments.
                 </p>
             </div>
             <div class="grid">
                 <div class="card reveal">
+                    <div class="highlight-badge">⭐ Patented Co-Inventor</div>
                     <div class="card-header">
                         <div class="card-title">Data Scientist</div>
                         <div class="card-subtitle">Mestastop Solutions</div>
-                        <div class="card-meta">May 2026 – Present</div>
+                        <div class="card-meta">June 2024 – Present | Bengaluru, India</div>
                     </div>
                     <div class="card-content">
                         <ul>
-                            <li>Spearheaded the end-to-end delivery of high-impact AI/ML initiatives, translating complex multi-omics and clinical data into strategic roadmaps for senior leadership and the Board of Directors</li>
-                            <li>Architected and deployed scalable ML pipelines and automated workflows that optimized computational resource allocation, successfully reducing project delivery cycles by 30%.</li>
-                            <li>Directed cross-functional R&D and clinical teams to prioritize high-probability experiments, accelerating two major drug discovery programs by 8 months.</li>
-                            <li>Influenced $0.2M budget allocation for AI-driven drug discovery by presenting ROI-focused roadmaps to C-suite and board</li>
-                            <li>Established model transparency standards using SHAP-based explainability frameworks, achieving 85% interpretability to ensure regulatory-aligned governance and actionable executive insights.</li>
-                            <li>Engineered advanced feature extraction pipelines for 500GB+ datasets, reducing dimensionality by 95% while preserving critical biological signals for large-scale model deployment.</li>
+                            <li>Managed parallel PoC and production tracks as an individual contributor, delivering AI/ML solutions across research and enterprise-facing workflows — driving <strong>40% improvement in operational efficiency</strong> and influencing <strong>$200K+</strong> in product investment decisions.</li>
+                            <li>Co-inventor on a <strong>patented ML algorithm</strong>, contributing to model architecture, feature engineering, validation strategy, and performance optimisation as part of a cross-functional team.</li>
+                            <li>Designed and deployed end-to-end machine learning pipelines on AWS (SageMaker, S3, EC2), integrating automated data ingestion, model training, and REST API serving to support real-time product decisions.</li>
+                            <li>Developed explainable AI layers using SHAP and LIME, surfacing model behaviour through dashboards and stakeholder reports to drive platform trust and adoption.</li>
+                            <li>Mentored junior data scientists, conducted model reviews, and built reusable Python templates for preprocessing, modelling, and evaluation — reducing team turnaround time across projects.</li>
                         </ul>
                     </div>
                     <div class="tags">
-                        <span class="tag">Leadership</span>
-                        <span class="tag">Strategic Planning</span>
-                        <span class="tag">SHAP</span>
-                        <span class="tag">MLOps</span>
-                    </div>
-                </div>
-                
-                <div class="card reveal">
-                    <div class="card-header">
-                        <div class="card-title">Jr. Data Scientist</div>
-                        <div class="card-subtitle">Mestastop Solutions</div>
-                        <div class="card-meta">June 2024 – April 2026</div>
-                    </div>
-                    <div class="card-content">
-                        <ul>
-                            <li>Owned the end-to-end execution of AI/ML project modules, from initial data ingestion to model deployment, ensuring all deliverables met clinical and technical accuracy standards.</li>
-                            <li>Engineered and automated ML workflows using Python and AWS, successfully reducing project delivery cycles by 25% and increasing overall business operational efficiency.</li>
-                            <li>IArchitected ensemble models (XGBoost, Random Forest) across 1,500+ structured datasets, driving model accuracy from 70% to 80% through iterative feature engineering and cross-validation.</li>
-                            <li>Integrated clinical and molecular data for 100+ patients, designing predictive algorithms that achieved an 0.82 AUC and 92% sensitivity across three distinct oncology biomarkers.</li>
-                        </ul>
-                        </ul>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">Leadership</span>
-                        <span class="tag">Strategic Planning</span>
-                        <span class="tag">SHAP</span>
-                        <span class="tag">MLOps</span>
+                        <span class="tag">AWS SageMaker</span>
+                        <span class="tag purple">SHAP & LIME</span>
+                        <span class="tag emerald">Mentorship</span>
+                        <span class="tag orange">REST APIs</span>
                     </div>
                 </div>
 
                 <div class="card reveal" style="transition-delay: 0.1s;">
                     <div class="card-header">
                         <div class="card-title">Data Scientist</div>
-                        <div class="card-subtitle">Turing Minds.Ai</div>
-                        <div class="card-meta">January 2023 – February 2024</div>
+                        <div class="card-subtitle">Turing Minds.AI</div>
+                        <div class="card-meta">October 2022 – February 2024 | Bengaluru, India</div>
                     </div>
                     <div class="card-content">
                         <ul>
-                            <li>Built ensemble models (XGBoost, Random Forest) on 1,500+ structured datasets</li>
-                            <li>Drove model performance from 70% to 80% through iterative preprocessing, feature selection, and cross-validation</li>
-                            <li>Delivered analytical insights via dashboards and presentations to management and stakeholders</li>
+                            <li>Built ensemble models (XGBoost, Random Forest) across <strong>1,500+ structured datasets</strong>, improving model accuracy <strong>from 70% to 80%</strong> through iterative preprocessing, feature selection, and cross-validation.</li>
+                            <li>Applied statistical modelling, hypothesis testing, and A/B testing to evaluate model effectiveness and measure business impact across customer and operational use cases.</li>
+                            <li>Created reusable Python project templates for preprocessing, modelling, and evaluation — reducing per-project turnaround time by <strong>~30%</strong> and standardising team delivery.</li>
+                            <li>Delivered analytical insights via Power BI dashboards and stakeholder presentations; conducted EDA to surface patterns, anomalies, and actionable signals for product and leadership teams.</li>
                         </ul>
                     </div>
                     <div class="tags">
                         <span class="tag">XGBoost</span>
-                        <span class="tag">Random Forest</span>
-                        <span class="tag">Feature Engineering</span>
-                        <span class="tag">Dashboards</span>
-                    </div>
-                </div>
-
-                <div class="card reveal" style="transition-delay: 0.2s;">
-                    <div class="card-header">
-                        <div class="card-title">Data Scientist Trainee</div>
-                        <div class="card-subtitle">Turing Minds.Ai</div>
-                        <div class="card-meta">October 2022 – December 2022</div>
-                    </div>
-                    <div class="card-content">
-                        <ul>
-                            <li>Conducted EDA to identify patterns and anomalies using Pandas, Matplotlib, and Seaborn</li>
-                            <li>Documented technical workflows and provided insights to internal teams</li>
-                            <li>Supported junior talent development and onboarding processes</li>
-                        </ul>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">EDA</span>
-                        <span class="tag">Pandas</span>
-                        <span class="tag">Matplotlib</span>
-                        <span class="tag">Seaborn</span>
+                        <span class="tag purple">A/B Testing</span>
+                        <span class="tag emerald">Power BI</span>
+                        <span class="tag orange">EDA</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Projects Section -->
+    <!-- Projects / POCs Section -->
     <section id="projects">
         <div class="container">
             <div class="section-header reveal">
                 <div class="section-badge">Portfolio</div>
-                <h2 class="section-title">Key Projects</h2>
+                <h2 class="section-title">Proofs of Concept</h2>
                 <p class="section-description">
-                    Real-world AI/ML projects delivering quantifiable outcomes in healthcare, oncology, and drug discovery.
+                    Real-world AI/ML proofs of concept delivering quantifiable outcomes in predictive analytics,
+                    drug discovery, and data quality monitoring.
                 </p>
             </div>
             <div class="grid">
                 <div class="card reveal">
                     <div class="card-header">
-                        <div class="card-title">Companion Diagnostics (Oncology)</div>
-                        <div class="card-meta">Team: 2 | Python, XGBoost, Random Forest, SHAP</div>
+                        <div class="card-title">Predictive Analytics Platform</div>
+                        <div class="card-meta">XGBoost · SageMaker · SHAP</div>
                     </div>
                     <div class="card-content">
-                        <p>Integrated patient clinical and molecular data for 100+ patients using ensemble ML, achieving 0.82 AUC. 
-                        Designed predictive algorithms validated across 3 oncology biomarkers (92% sensitivity, 89% specificity) 
-                        to drive targeted interventions.</p>
-                        <p>Refined 500+ patient sample data via Python and Bioconductor, reducing experimental time by 3 weeks 
-                        and improving throughput.</p>
+                        <p>Designed and deployed an end-to-end ML pipeline for high-stakes prediction tasks: automated
+                        feature engineering, ensemble model training, SageMaker endpoint deployment, and SHAP-based
+                        explainability layer — achieving <strong>AUC 0.82</strong> with <strong>40% efficiency improvement</strong>
+                        over baseline.</p>
                     </div>
                     <div class="tags">
-                        <span class="tag">Oncology</span>
-                        <span class="tag">Biomarkers</span>
-                        <span class="tag">0.82 AUC</span>
-                        <span class="tag">92% Sensitivity</span>
+                        <span class="tag">XGBoost</span>
+                        <span class="tag purple">SageMaker</span>
+                        <span class="tag emerald">0.82 AUC</span>
+                        <span class="tag orange">SHAP</span>
                     </div>
                 </div>
 
                 <div class="card reveal" style="transition-delay: 0.1s;">
                     <div class="card-header">
-                        <div class="card-title">Drug Discovery & Drug Repurposing</div>
-                        <div class="card-meta">Team: 3 | Python, Scikit-learn, SHAP, AutoDock Vina, ChEMBL</div>
+                        <div class="card-title">Entity Interaction Screening — Drug-Target Prediction</div>
+                        <div class="card-meta">PySpark · NLP · Bayesian</div>
                     </div>
                     <div class="card-content">
-                        <p>Collaborated with multi-disciplinary teams to analyze 100+ compounds, achieving 65% improvement in 
-                        binding affinity and reducing experimental testing time by 35%.</p>
-                        <p>Engineered feature extraction pipeline processing 500GB+ of multi-omics data (RNA-seq, proteomics), 
-                        reducing dimensionality by 95% while retaining biological signals.</p>
-                        <p>Conducted retrospective clinical analysis (N=73) uncovering patient subgroups with 2.3x higher 
-                        treatment efficacy.</p>
+                        <p>Built a large-scale entity interaction scoring system across <strong>1,000+ compound-target pairs</strong>,
+                        applying NLP and statistical modelling to rank and prioritise candidates — surfacing
+                        <strong>200+ high-confidence leads</strong> with a <strong>2.3× improvement</strong> in subgroup
+                        efficacy signal (N=73).</p>
                     </div>
                     <div class="tags">
-                        <span class="tag">Drug Discovery</span>
-                        <span class="tag">Multi-Omics</span>
-                        <span class="tag">65% Improvement</span>
-                        <span class="tag">2.3x Efficacy</span>
+                        <span class="tag">PySpark</span>
+                        <span class="tag purple">NLP</span>
+                        <span class="tag emerald">Bayesian Modelling</span>
+                        <span class="tag orange">2.3× Efficacy</span>
                     </div>
                 </div>
 
                 <div class="card reveal" style="transition-delay: 0.2s;">
                     <div class="card-header">
-                        <div class="card-title">Pima Indian Diabetes Prediction</div>
-                        <div class="card-meta">SKDNN Classifier, KNN Optimization</div>
+                        <div class="card-title">Data Quality & Forecast Violation Dashboard</div>
+                        <div class="card-meta">Python · Power BI · CI/CD</div>
                     </div>
                     <div class="card-content">
-                        <p>Implemented predictive modeling on the Pima Indian Diabetes Dataset achieving 85% accuracy with 
-                        a 90% training and 10% testing split.</p>
-                        <p>Proposed a novel distance calculation formula reducing computation time by 25% and increasing 
-                        nearest-neighbor accuracy by 15% in KNN.</p>
+                        <p>Created an automated pipeline to monitor upstream data quality, detect anomalies and schema
+                        violations, and publish business-impact metrics to a live Power BI dashboard — integrated into
+                        CI/CD for continuous monitoring without manual intervention.</p>
                     </div>
                     <div class="tags">
-                        <span class="tag">Diabetes Prediction</span>
-                        <span class="tag">SKDNN</span>
-                        <span class="tag">85% Accuracy</span>
-                        <span class="tag">KNN Optimization</span>
+                        <span class="tag">Python</span>
+                        <span class="tag purple">Power BI</span>
+                        <span class="tag emerald">CI/CD</span>
+                        <span class="tag orange">Anomaly Detection</span>
                     </div>
                 </div>
             </div>
@@ -1020,96 +526,114 @@
                 <div class="section-badge">Technical Arsenal</div>
                 <h2 class="section-title">Skills & Expertise</h2>
                 <p class="section-description">
-                    Comprehensive expertise spanning machine learning, cloud infrastructure, and domain-specific healthcare AI.
+                    Comprehensive expertise spanning Generative AI, machine learning, cloud infrastructure, and
+                    stakeholder-facing analytics.
                 </p>
             </div>
             <div class="skills-grid">
                 <div class="skill-category reveal-left">
-                    <h3>Programming & ML Frameworks</h3>
+                    <h3>Technical</h3>
                     <div class="skill-item">
                         <div class="skill-header">
-                            <span class="skill-name">Python, SQL, Bash</span>
+                            <span class="skill-name">Python · SQL</span>
                             <span class="skill-level">Expert</span>
                         </div>
-                        <div class="skill-bar">
-                            <div class="skill-fill" data-width="95"></div>
-                        </div>
+                        <div class="skill-bar"><div class="skill-fill" data-width="95"></div></div>
                     </div>
                     <div class="skill-item">
                         <div class="skill-header">
-                            <span class="skill-name">Scikit-learn, XGBoost</span>
+                            <span class="skill-name">LLMs · RAG Architectures</span>
+                            <span class="skill-level">Advanced</span>
+                        </div>
+                        <div class="skill-bar"><div class="skill-fill" data-width="86"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Agentic AI</span>
+                            <span class="skill-level">Advanced</span>
+                        </div>
+                        <div class="skill-bar"><div class="skill-fill" data-width="82"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Machine Learning (XGBoost, Ensemble)</span>
                             <span class="skill-level">Expert</span>
                         </div>
-                        <div class="skill-bar">
-                            <div class="skill-fill" data-width="92"></div>
-                        </div>
+                        <div class="skill-bar"><div class="skill-fill" data-width="93"></div></div>
                     </div>
                     <div class="skill-item">
                         <div class="skill-header">
-                            <span class="skill-name">TensorFlow, PyTorch</span>
+                            <span class="skill-name">AWS (SageMaker, S3, EC2)</span>
                             <span class="skill-level">Advanced</span>
                         </div>
-                        <div class="skill-bar">
-                            <div class="skill-fill" data-width="85"></div>
-                        </div>
+                        <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
                     </div>
                     <div class="skill-item">
                         <div class="skill-header">
-                            <span class="skill-name">Power Bi, Tableau, Excel</span>
+                            <span class="skill-name">SHAP & LIME / Fine-Tuning</span>
                             <span class="skill-level">Advanced</span>
                         </div>
-                        <div class="skill-bar">
-                            <div class="skill-fill" data-width="88"></div>
-                        </div>
+                        <div class="skill-bar"><div class="skill-fill" data-width="87"></div></div>
                     </div>
                     <div class="skill-item">
                         <div class="skill-header">
-                            <span class="skill-name">SHAP, LIME</span>
+                            <span class="skill-name">Power BI · Data Pipelines</span>
                             <span class="skill-level">Advanced</span>
                         </div>
-                        <div class="skill-bar">
-                            <div class="skill-fill" data-width="88"></div>
-                        </div>
+                        <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
                     </div>
                 </div>
 
                 <div class="skill-category reveal-right">
-                    <h3>Data Science & MLOps</h3>
+                    <h3>Domain Expertise</h3>
                     <div class="skill-item">
                         <div class="skill-header">
-                            <span class="skill-name">EDA, Statistical Modeling</span>
+                            <span class="skill-name">Enterprise AI/ML Product Delivery</span>
                             <span class="skill-level">Expert</span>
                         </div>
-                        <div class="skill-bar">
-                            <div class="skill-fill" data-width="90"></div>
-                        </div>
+                        <div class="skill-bar"><div class="skill-fill" data-width="92"></div></div>
                     </div>
                     <div class="skill-item">
                         <div class="skill-header">
-                            <span class="skill-name">AWS (S3, EC2, SageMaker)</span>
-                            <span class="skill-level">Advanced</span>
+                            <span class="skill-name">PoC-to-Production</span>
+                            <span class="skill-level">Expert</span>
                         </div>
-                        <div class="skill-bar">
-                            <div class="skill-fill" data-width="82"></div>
-                        </div>
+                        <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
                     </div>
                     <div class="skill-item">
                         <div class="skill-header">
-                            <span class="skill-name">Docker, GitHub</span>
+                            <span class="skill-name">Model Versioning & Governance</span>
                             <span class="skill-level">Advanced</span>
                         </div>
-                        <div class="skill-bar">
-                            <div class="skill-fill" data-width="80"></div>
-                        </div>
+                        <div class="skill-bar"><div class="skill-fill" data-width="83"></div></div>
                     </div>
                     <div class="skill-item">
                         <div class="skill-header">
-                            <span class="skill-name">Genomics, Bioinformatics</span>
+                            <span class="skill-name">Explainable AI</span>
                             <span class="skill-level">Advanced</span>
                         </div>
-                        <div class="skill-bar">
-                            <div class="skill-fill" data-width="84"></div>
+                        <div class="skill-bar"><div class="skill-fill" data-width="86"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Survival Analysis</span>
+                            <span class="skill-level">Advanced</span>
                         </div>
+                        <div class="skill-bar"><div class="skill-fill" data-width="78"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Predictive & Statistical Modelling</span>
+                            <span class="skill-level">Expert</span>
+                        </div>
+                        <div class="skill-bar"><div class="skill-fill" data-width="91"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Predictive Analytics</span>
+                            <span class="skill-level">Expert</span>
+                        </div>
+                        <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
                     </div>
                 </div>
             </div>
@@ -1123,33 +647,47 @@
                 <div class="section-badge">Academic Background</div>
                 <h2 class="section-title">Education & Certifications</h2>
                 <p class="section-description">
-                    Strong academic foundation complemented by specialized training in data science and healthcare AI.
+                    Strong academic foundation complemented by specialized training in data science, analytics,
+                    and AI for life sciences.
                 </p>
             </div>
             <div class="grid">
                 <div class="card reveal">
                     <div class="card-header">
-                        <div class="card-title">PG Program in Data Science</div>
-                        <div class="card-subtitle">Case Western Reserve University, upGrad & INSOFE</div>
-                        <div class="card-meta">2023 | Bengaluru</div>
+                        <div class="card-title">PG Program in Data Science and Analytics</div>
+                        <div class="card-subtitle">International School of Engineering</div>
+                        <div class="card-meta">2022 – 2023</div>
                     </div>
                 </div>
                 <div class="card reveal" style="transition-delay: 0.1s;">
                     <div class="card-header">
-                        <div class="card-title">B.E. Information Science & Engineering</div>
+                        <div class="card-title">B.E. in Electronics and Communication</div>
                         <div class="card-subtitle">T John Institute of Technology</div>
-                        <div class="card-meta">2022 | Bengaluru | CGPA: 7.0/10</div>
+                        <div class="card-meta">2018 – 2022</div>
                     </div>
                 </div>
-                <div class="card reveal" style="transition-delay: 0.2s;">
-                    <div class="card-header">
-                        <div class="card-title">Professional Certifications</div>
+            </div>
+
+            <div class="achieve-strip" style="margin-top:2.5rem;">
+                <div class="achieve-card reveal">
+                    <div class="achieve-icon">🏆</div>
+                    <div>
+                        <div class="achieve-title">Co-Inventor — Patented ML Algorithm</div>
+                        <div class="achieve-desc">Patented Machine Learning-Driven Predictive Analytics Algorithm</div>
                     </div>
-                    <div class="card-content">
-                        <ul>
-                            <li><strong>Biology of Cancer</strong> - Coursera, 2024</li>
-                            <li><strong>Computational Data Science</strong> - Case Western Reserve University & INSOFE, 2023</li>
-                        </ul>
+                </div>
+                <div class="achieve-card reveal" style="transition-delay:.1s;">
+                    <div class="achieve-icon">📝</div>
+                    <div>
+                        <div class="achieve-title">Research & Publication</div>
+                        <div class="achieve-desc">Co-authoring a peer-reviewed manuscript on ML and predictive analytics</div>
+                    </div>
+                </div>
+                <div class="achieve-card reveal" style="transition-delay:.2s;">
+                    <div class="achieve-icon">🧬</div>
+                    <div>
+                        <div class="achieve-title">Biology of Cancer — Coursera</div>
+                        <div class="achieve-desc">Domain upskilling for AI in life sciences</div>
                     </div>
                 </div>
             </div>
@@ -1169,7 +707,7 @@
                     <div class="section-badge">Get In Touch</div>
                     <h2 class="section-title">Let's Work Together</h2>
                     <p class="section-description">
-                        Ready to discuss AI/ML opportunities in healthcare, oncology, or drug discovery? 
+                        Ready to discuss opportunities in LLMs, RAG, agentic AI, or enterprise ML product delivery?
                         I'm open to new challenges and collaborations.
                     </p>
                 </div>
@@ -1177,12 +715,12 @@
                     <div class="contact-item reveal">
                         <div class="contact-icon">📧</div>
                         <div class="contact-label">Email</div>
-                        <div class="contact-value">mohammedshaban854@gmail.com</div>
+                        <div class="contact-value"><a href="mailto:mohammedshaban854@gmail.com">mohammedshaban854@gmail.com</a></div>
                     </div>
                     <div class="contact-item reveal" style="transition-delay: 0.1s;">
                         <div class="contact-icon">📱</div>
                         <div class="contact-label">Phone</div>
-                        <div class="contact-value">+91-9886549746</div>
+                        <div class="contact-value"><a href="tel:+919886549746">+91 9886549746</a></div>
                     </div>
                     <div class="contact-item reveal" style="transition-delay: 0.2s;">
                         <div class="contact-icon">📍</div>
@@ -1192,12 +730,21 @@
                     <div class="contact-item reveal" style="transition-delay: 0.3s;">
                         <div class="contact-icon">💼</div>
                         <div class="contact-label">LinkedIn</div>
-                        <div class="contact-value">mohammed-shaban-6a8915229</div>
+                        <div class="contact-value"><a href="https://linkedin.com/in/mohammed-shaban-6a8915229" target="_blank">mohammed-shaban-6a8915229</a></div>
+                    </div>
+                    <div class="contact-item reveal" style="transition-delay: 0.4s;">
+                        <div class="contact-icon">💻</div>
+                        <div class="contact-label">GitHub</div>
+                        <div class="contact-value"><a href="https://github.com/mohammed-shaban" target="_blank">github.com/mohammed-shaban</a></div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <footer>
+        <p>© 2025 Mohammed Shaban · Data Scientist · LLMs, RAG & Agentic AI · Bengaluru, India</p>
+    </footer>
 
     <script>
         // Loader
@@ -1232,7 +779,7 @@
         animateCursor();
 
         // Cursor hover effects
-        const hoverElements = document.querySelectorAll('a, .btn, .card');
+        const hoverElements = document.querySelectorAll('a, .btn, .card, .achieve-card, .contact-item');
         hoverElements.forEach(el => {
             el.addEventListener('mouseenter', () => ring.classList.add('cursor-hover'));
             el.addEventListener('mouseleave', () => ring.classList.remove('cursor-hover'));
@@ -1284,7 +831,7 @@
 
         function animateParticles() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
+
             particles.forEach(particle => {
                 particle.update();
                 particle.draw();
@@ -1312,17 +859,13 @@
         animateParticles();
 
         // Scroll Reveal
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.1
-        };
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    
+
                     // Animate skill bars
                     if (entry.target.classList.contains('skill-category')) {
                         const skillFills = entry.target.querySelectorAll('.skill-fill');
@@ -1347,13 +890,21 @@
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             });
         });
+
+        // Nav active state on scroll
+        const secs = document.querySelectorAll('section[id]');
+        const navAs = document.querySelectorAll('.nav-links a');
+        window.addEventListener('scroll', () => {
+            let cur = '';
+            secs.forEach(s => { if (window.scrollY >= s.offsetTop - 180) cur = s.id; });
+            navAs.forEach(a => {
+                a.classList.toggle('active', a.getAttribute('href') === '#' + cur);
+            });
+        }, { passive: true });
     </script>
 </body>
 </html>
